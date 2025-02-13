@@ -32,3 +32,8 @@ variable "db_network_security_group_id" {
   type        = string
   description = "The ID of the network security group to associate with the db network interface"
 }
+
+variable "private_ip_address" {
+  type        = string
+  description = "The fixed private IP address to assign to the db network interface"
+} 

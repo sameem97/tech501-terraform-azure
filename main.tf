@@ -42,7 +42,7 @@ data "azurerm_network_security_group" "app_nsg" {
 data "azurerm_network_security_group" "db_nsg" {
   name                = "tech501-sameem-in-3-subnet-sparta-app-db-nsg"
   resource_group_name = data.azurerm_resource_group.rg.name
-  
+
 }
 
 data "azurerm_ssh_public_key" "ssh" {
@@ -51,24 +51,25 @@ data "azurerm_ssh_public_key" "ssh" {
 }
 
 module "networking" {
-  source                    = "./networking-module"
-  resource_group_name       = data.azurerm_resource_group.rg.name
-  location                  = data.azurerm_resource_group.rg.location
+  source                        = "./networking-module"
+  resource_group_name           = data.azurerm_resource_group.rg.name
+  location                      = data.azurerm_resource_group.rg.location
   app_subnet_id                 = data.azurerm_subnet.public_subnet.id
   db_subnet_id                  = data.azurerm_subnet.private_subnet.id
+  private_ip_address            = var.private_ip_address
   app_network_security_group_id = data.azurerm_network_security_group.app_nsg.id
-  db_network_security_group_id = data.azurerm_network_security_group.db_nsg.id
-  public_key                = var.public_key
+  db_network_security_group_id  = data.azurerm_network_security_group.db_nsg.id
+  public_key                    = var.public_key
 }
 
 module "db" {
-  source     = "./db-module"
-  resource_group_name = data.azurerm_resource_group.rg.name
-  location            = data.azurerm_resource_group.rg.location
-  db_source_image_id = var.db_source_image_id
-  public_key         = var.public_key
+  source               = "./db-module"
+  resource_group_name  = data.azurerm_resource_group.rg.name
+  location             = data.azurerm_resource_group.rg.location
+  db_source_image_id   = var.db_source_image_id
+  public_key           = var.public_key
   network_interface_id = module.networking.db_network_interface_id
-  depends_on = [module.networking]
+  depends_on           = [module.networking]
 }
 
 module "app" {
@@ -78,5 +79,6 @@ module "app" {
   location             = data.azurerm_resource_group.rg.location
   network_interface_id = module.networking.app_network_interface_id
   public_key           = var.public_key
+  custom_data          = var.custom_data
   depends_on           = [module.db]
 }

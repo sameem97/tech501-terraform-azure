@@ -27,7 +27,7 @@ resource "azurerm_network_interface" "db_nic" {
     name                          = "tech501-sameem-terraform-app-db-nic-ip"
     subnet_id                     = var.db_subnet_id
     private_ip_address_allocation = "Static"
-    private_ip_address = "10.0.3.4"
+    private_ip_address            = var.private_ip_address
   }
 }
 
@@ -37,6 +37,6 @@ resource "azurerm_network_interface_security_group_association" "app_nsg_assoc" 
 }
 
 resource "azurerm_network_interface_security_group_association" "db_nsg_assoc" {
-  network_interface_id = azurerm_network_interface.db_nic.id
+  network_interface_id      = azurerm_network_interface.db_nic.id
   network_security_group_id = var.db_network_security_group_id
 }

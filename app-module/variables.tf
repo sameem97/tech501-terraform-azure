@@ -22,3 +22,8 @@ variable "public_key" {
   type        = string
   description = "The public key to be used for SSH access to the app VM"
 }
+
+variable "custom_data" {
+  type        = string
+  description = "The custom data to be used for the app VM"
+}

@@ -17,12 +17,5 @@ resource "azurerm_linux_virtual_machine" "vm" {
     public_key = var.public_key
   }
 
-  custom_data = base64encode(<<EOF
-#!/bin/bash
-export DB_HOST=mongodb://10.0.3.4:27017/posts
-cd /tech501-sparta-app/app
-pm2 start app.js
-pm2 save
-EOF
-  )
+  custom_data = base64encode(var.custom_data)
 }
